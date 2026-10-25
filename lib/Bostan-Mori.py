@@ -7,12 +7,6 @@
 
 # MOD = 998244353
 
-def even(P):
-    return P[0::2]
-
-def odd(P):
-    return P[1::2]
-
 # naiveな実装 O(NM)
 # 必要に応じてconvolutionに置き換える
 def mul(P, Q):
@@ -24,18 +18,30 @@ def mul(P, Q):
             R[i+j] %= MOD
     return R
 
+def even(P):
+    return P[0::2]
+
+def odd(P):
+    return P[1::2]
+
 def negx(Q):
     return [(-n if i&1 else n) for i, n in enumerate(Q)]
 
 def bostan_mori(N, P, Q):
-    '''Bostan-Mori のアルゴリズム で P(x)/Q(x) の x^N の係数を求める
+    """Bostan-Mori のアルゴリズム で P(x)/Q(x) の x^N の係数を求める
+    
     Args:
         N (int): 求める項
         P (list[int]): 分子の係数
         Q (list[int]): 分母の係数
+    
     Returns:
         int: [x^N] P(x)/Q(x)
-    '''
+    
+    Examples:
+        >>> bostan_mori(100, [0, 1], [1, -1, -1])
+        494958974
+    """
     while N > 0:
         Qx = negx(Q)
         U = mul(P, Qx)
@@ -44,6 +50,3 @@ def bostan_mori(N, P, Q):
         Q = even(mul(Q, Qx))
         N >>= 1
     return P[0] * pow(Q[0], -1, MOD)
-
-# # 例：フィボナッチ数列の第 100 項
-# print(bostan_mori(100, [0, 1], [1, -1, -1]))
